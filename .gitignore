@@ -1,0 +1,8 @@
+/.vscode
+/chromedriver.exe
+/geckodriver.log
+/run.py
+/run2.py
+/run3.py
+/test.py
+/__pycache__
