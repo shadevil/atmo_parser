@@ -6,8 +6,8 @@ from selenium.webdriver.common.keys import Keys
 start_time = time.time();
 
 chromeOptions = webdriver.ChromeOptions() 
-chromeOptions.add_experimental_option("excludeSwitches", ["enable-logging"])
-chromeOptions.add_argument("--headless")
+chromeOptions.add_experimental_option('excludeSwitches', ['enable-logging'])
+chromeOptions.add_argument('--headless')
 driver = webdriver.Chrome(options=chromeOptions, executable_path=r'C:\drivers\chromedriver.exe')
 #action = ActionChains(driver)
 
@@ -28,13 +28,21 @@ fulltime = round((time.time() - start_time),2)
 time.sleep(1)
 asdasda = driver.find_elements_by_partial_link_text('')  #Информация о закупке 
 print('---Lets parse---')
-time.sleep(2)
-for i in asdasda:
-    print(i.get_attribute("href"))
-print("--- %s seconds ---" % fulltime)
+time.sleep(1)
+linksNotClean = []
+links = []
+for i in asdasda:    
+    intermediate = i.get_attribute('href')
+    linksNotClean.append(intermediate)
+#print('--------------------')
+for i in linksNotClean:
+    if "order-info" in i:
+        if i not in links:
+            links.append(i)
+count = len(links)
+print('%s links received' % count)
+print('Worktime: %s seconds' % fulltime)
 
 # window_before = driver.window_handles[0]
-
-
-time.sleep(3) # Let the user actually see something!
+#time.sleep(3) # Let the user actually see something!
 driver.close()
