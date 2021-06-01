@@ -58,20 +58,7 @@ get_links()
 
 
 
-#pprint(links)
+pprint(links)
 print('Worktime: %s seconds' % fulltime)
 
 driver.close()
-
-
-#element.get_attribute('innerHTML');
-
-# window_before = driver.window_handles[0]
-
-#element = driver.find_element_by_xpath("//div[@id='a']//a[@class='click']")
-# timetoend = driver.find_elements_by_class_name('fs-18 m-0 grey-color fw-600 time_to_end') #Осталось до окончания приема предложений
-# groups = driver.find_elements_by_class_name('fs-12 grey-color fw-600') #Группа закупки
-# customers = driver.find_elements_by_xpath('p+a') #закупщик
-# procurementLinks = driver.find_elements_by_xpath('a.system_link-style') # ссылка на закупку system_link-style
-# #procurementLinks = driver.find_element_by_class_name('d-flex align-items-center green-color fs-12 fw-600 my-2') # ссылка на закупку system_link-style
-# proposalLinks = driver.find_element_by_class_name('d-flex align-items-center green-color fs-12 fw-600 my-2') # ссылка на закупку system_link-style
