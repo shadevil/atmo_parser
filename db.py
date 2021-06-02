@@ -24,7 +24,7 @@ def insert(db_file,links,dynamics,sections,dates,times,counts):
         c = conn.cursor()
         for i in range(len(links)):
             command = "insert into tenders (link,dynamics,section,dates,times,counts) values(?,?,?,?,?,?)" #,section,dates,times,counts
-            c.execute(command,(links[1,i],dynamics[1,i],sections[1,i],dates[1,i],times[1,i],counts[1,i]))        #section,dates[i],times[i],counts[i]
+            c.execute(command,(links[1][i],sections[2,i],dates[1,i],times[1,i],counts[1,i]))        #section,dates[i],times[i],counts[i]
             conn.commit()
     except Error as e:
         print(e)
