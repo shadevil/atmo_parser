@@ -1,6 +1,6 @@
-import collections,multiprocessing,time,info,datetime,schedule,db1
+import collections,multiprocessing,time,info,datetime,db1,os,copy
 from selenium import webdriver
-from itertools import product
+from itertools import product, permutations
 from selenium.webdriver.common.keys import Keys
 from pprint import pprint
 
@@ -14,7 +14,7 @@ def start():
     start_time = time.time();
     
     db1.operators('createTenders')
-    db1.operators('createItems')
+    #db1.operators('createItems')
     d.driver.get(info.website)
     fulltime = round((time.time() - start_time),2)
     time.sleep(0.5)
@@ -22,18 +22,16 @@ def listAppender(webElement,list1):
     for i in webElement:
         list1.append(i.get_attribute('innerHTML'))
             
-linksNotClean=[];links=[];items=[];sections=[];dates=[];times=[];counts=[];inside=[];listOfAll = []
+linksNotClean=[];links=[];sections=[];dates=[];times=[];counts=[];listOfAll = [];items = []
 def get_data():
     listOfAll.clear()
     linksNotClean.clear()
     links.clear()
-    items.clear();
     sections.clear()
     dates.clear()
     times.clear()
     counts.clear()
-    inside.clear()
-    
+    items.clear()
     print('---Parsing...---') 
     time.sleep(0.5)
     webElements = d.driver.find_elements_by_xpath("//p/a[@class='system_link-style']")
@@ -43,10 +41,10 @@ def get_data():
         
     for i in linksNotClean:
         if "order-info" in i:
-            if i not in links:                
+            if i not in links:              
                 links.append(i)
-                name(i)
-               
+    getItems(links)
+    d.driver.switch_to_window(d.driver.window_handles[0])
     sectionEl = d.driver.find_elements_by_xpath("//div/p[@class='fs-12 grey-color fw-600']")
     dateToEndEl = d.driver.find_elements_by_xpath("//div/p[@class='fw-600 fs-12 m-0 grey-color']")
     timeToEndEl = d.driver.find_elements_by_xpath("//div/p[@class='fs-12 m-0 grey-color fw-600 time_to_end']")
@@ -61,56 +59,46 @@ def get_data():
     listOfAll.append(dates)
     listOfAll.append(times)
     listOfAll.append(counts)
-    #pprint(listOfAll)
-    #pprint(items)
-    
     db1.operators('insert',listOfAll,items)
     print('%s items received from page' % '')
     print('--------------------')
 
-def name(link):
-    
-    d.driver.execute_script("window.open('"+link + "', 'name')")
-    d.driver.switch_to.window('name')
-    time.sleep(0.5)
-    itemEl = d.driver.find_elements_by_xpath("//tbody/tr")    
-    for item in itemEl:
-        s = item.get_attribute('name')
-        inside.append(s)
-    items.append(inside)
-    d.driver.close()
-    #driver.switch_to_window(driverHandles)
-    d.driver.switch_to_window(d.driver.window_handles[0])
-    
+def getItems(links):
+    inside = []
+    for link in links:        
+        d.driver.execute_script("window.open('"+link + "', 'name')")
+        d.driver.switch_to.window('name')
+        time.sleep(1)
+        itemEl = d.driver.find_elements_by_xpath("//tbody/tr")    
+        for item in itemEl:
+            s = item.get_attribute('name')
+            inside.append(s)
+        items.append(copy.deepcopy(inside))             
+        #driver.switch_to_window(driverHandles)
+        inside.clear()
 # 
 
 def parsing():
-    for i in range(2,5,1):
-    #i = 2     
+    for i in range(2,5,1):   
         get_data()    
         b2 = d.driver.find_element_by_xpath("(//button[@aria-label='Go to page " + str(i) + "'])[1]")
         b2.click()
-        time.sleep(0.5)
+        time.sleep(1)
     get_data()
     d.driver.close()
 
 def runner():
     start()
-    parsing()
-
-def dropTables():
-    db1.operators('drop tables')
-#main()
-schedule.every(5).minutes.do(runner)
-schedule.every(2).days.do(dropTables)
+    parsing()    
+    d.driver.close()
 # now = datetime.datetime.now()
 # today8am = now.replace(hour=8, minute=0, second=0, microsecond=0)
 # today6pm = now.replace(hour=18, minute=0, second=0, microsecond=0)
 
-while True:
-    #if today8am < now < today6pm:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     #if today8am < now < today6pm:
+#     schedule.run_pending()
+#     time.sleep(1)
 # today8am = now.replace(hour=8, minute=0, second=0, microsecond=0)
 # today6pm = now.replace(hour=18, minute=0, second=0, microsecond=0)
 # schedule.every(10).minutes.do(do())
