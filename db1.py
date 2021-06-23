@@ -18,10 +18,16 @@ def operators(operator, p1=None, p2=None):
         #         print('Items created or exists')
         
         if operator=='read_tables':
-            #sqlite_select_query = '''SELECT t.id, t.section, t.link, t.dates, t.times, t.counts, GROUP_CONCAT(i.name,',') as names from tenders t inner join items i on t.id=i.tenderkey'''
-            sqlite_select_query = '''SELECT id, section, link, dates, times, counts, items, dateInsert from tenders'''
-            cur.execute(sqlite_select_query)
-            return cur.fetchall()
+            try:
+                #sqlite_select_query = '''SELECT t.id, t.section, t.link, t.dates, t.times, t.counts, GROUP_CONCAT(i.name,',') as names from tenders t inner join items i on t.id=i.tenderkey'''
+                sqlite_select_query = '''SELECT id, section, link, dates, times, counts, items, dateInsert from tenders'''
+                cur.execute(sqlite_select_query)
+                if(cur.fetchall!=None):
+                    return cur.fetchall()
+                else:
+                    return None
+            except:
+                return None
         if operator=='insert':
             for i in range(len(p1[0])):
                 #if select(list1[0][i]) == False:
@@ -30,7 +36,7 @@ def operators(operator, p1=None, p2=None):
                 tendersInsert = "insert or ignore into tenders (link,section,dates,times,counts,items,dateInsert) values(?,?,?,?,?,?,DATE('now'))" #,section,dates,times,counts
                 cur.execute(tendersInsert,(p1[0][i],p1[1][i],p1[2][i],p1[3][i][7:],p1[4][i],items))
                 #section,dates[i],times[i],counts[i]
-                print(items)
+                #print(items)
 
         if operator=='drop tables':
             cur.execute('DROP TABLE IF EXISTS tenders;')
