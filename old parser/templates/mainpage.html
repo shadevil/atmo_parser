@@ -1,0 +1,42 @@
+<html>
+<head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body>
+<h1>Парсер сайта zakaz.bashkortostan.ru</h1>
+<h2>База обновляется каждые 15 минут. Периодически обновляйте страницу. Сейчас загружено {{items}} закупок.</h2>
+<p><div id="datetime"></div></p>
+<input id="search" type="text" class="form-control" placeholder="Искать по предметам закупки" oninput = "searching()">
+<table id="maintable" class="table" border="1">
+    <thead>
+    <tr>
+    <th scope="col">№</th>
+    <th scope="col">Название работ</th>
+    <th scope="col">Ссылка</th>
+    <th scope="col">Дата окончания работ</th>
+    <th scope="col">До окончания приема предложений</th>
+    <th scope="col">Стартовая цена</th>
+    <th scope="col">Предметы закупки</th>
+    <th scope="col">Адрес</th>
+    </tr>
+    </thead>
+    {% for col in items%}
+    <tr>
+        <td scope="row">{{col[0]}}</td>
+        <td scope="row">{{col[1]}}</td>
+        <td scope="row"><a href={{col[2]}} target="_blank" class="link-primary">Перейти</a></td>
+        <td scope="row">{{col[3]}}</td>
+        <td scope="row">{{col[4]}}</td>
+        <td scope="row">{{col[5]}}</td>
+        <td scope="row"><details><summary>Раскрыть</summary>{{col[6]}}</details></td>
+        <td scope="row">{{col[7]}}</td>
+        
+    </tr>
+    
+{% endfor %}
+</table>
+<script type="text/javascript"
+         src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
